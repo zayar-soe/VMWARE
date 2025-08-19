@@ -1,0 +1,35 @@
+---
+- name: Patch standalone ESXi host via SSH
+  hosts: ESXI-01
+  gather_facts: no
+  become: false
+  vars:
+    backup_file: /tmp/configBundle-esxi.host.domain.tgz
+  tasks:
+
+    - name: Save the ESXi configuration locally by authenticating directly against the ESXi host
+      community.vmware.vmware_cfg_backup:
+        hostname: '{{ ansible_host }}'
+        username: '{{ ansible_user }}'
+        password: '{{ ansible_password }}'
+        state: saved
+        dest: '{{ backup_file }}'
+        validate_certs: false
+      delegate_to: localhost
+      
+- name: Confirm backup file was saved locally and move to artifacts
+  hosts: localhost
+  gather_facts: no
+  become: false
+  vars:
+    backup_file: /tmp/configBundle-esxi.host.domain.tgz
+    artifact_file: /runner/artifacts/{{ tower_job_id }}/configBundle-esxi.host.domain.tgz
+  tasks:
+    - name: Confirm backup file was saved
+      stat:
+        path: '{{ backup_file }}'
+      register: backup_file_info
+
+    - name: Show backup status
+      debug:
+        msg: "Backup saved: {{ backup_file_info.stat.exists }}"
