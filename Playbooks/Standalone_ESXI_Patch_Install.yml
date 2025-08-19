@@ -4,7 +4,7 @@
   gather_facts: no
   become: false
   vars:
-    patch_file: /vmfs/volumes/68a42703-19b023d8-294c-000c29d2ad89/VMware-ESXi-8.0U3e-24674464-depot.zip
+    patch_file: /vmfs/volumes/68a43cab-9ab2bbda-4a78-000c293c5a2f/VMware-ESXi-7.0U3p-23307199-depot.zip
 
   tasks:
     - name: Put host in maintenance mode
@@ -16,7 +16,7 @@
 
     - name: Install ESXi patch
       ansible.builtin.shell: >
-        esxcli software profile update -p ESXi-8.0U3e-24674464-standard -d {{ patch_file }} 
+        esxcli software profile update -p ESXi-7.0U3p-23307199-depot-standard -d {{ patch_file }} 
       register: patch_output
 
     - name: Show patch result
