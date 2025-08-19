@@ -1,6 +1,6 @@
 ---
 - name: Patch standalone ESXi host via SSH
-  hosts: ESXI-01
+  hosts: TESTVM01
   gather_facts: no
   become: false
   vars:
