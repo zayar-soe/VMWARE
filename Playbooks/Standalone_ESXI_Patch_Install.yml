@@ -1,0 +1,39 @@
+---
+- name: Patch standalone ESXi host via SSH
+  hosts: ESXI-01
+  gather_facts: no
+  become: false
+  vars:
+    patch_file: /vmfs/volumes/68a2f8e3-3c4054b9-8d0c-000c29bbac35/VMware-ESXi-8.0U3e-24674464-depot.zip
+
+  tasks:
+    - name: Put host in maintenance mode
+      ansible.builtin.shell: vim-cmd hostsvc/maintenance_mode_enter
+      register: enter_mm
+
+    - name: Confirm maintenance mode entered
+      debug: var=enter_mm.stdout
+
+    - name: Install ESXi patch
+      ansible.builtin.shell: >
+        esxcli software profile update -p ESXi-8.0U3e-24674464-standard -d {{ patch_file }} 
+      register: patch_output
+
+    - name: Show patch result
+      debug: var=patch_output.stdout_lines
+
+    - name: Reboot ESXi host
+      ansible.builtin.shell: reboot
+      async: 1
+      poll: 0
+      
+    - name: Wait 180 seconds before checking SSH
+      pause:
+        seconds: 180
+
+    - name: Exit maintenance mode
+      ansible.builtin.shell: vim-cmd hostsvc/maintenance_mode_exit
+      register: exit_mm
+
+    - name: Confirm maintenance mode exited
+      debug: var=exit_mm.stdout
