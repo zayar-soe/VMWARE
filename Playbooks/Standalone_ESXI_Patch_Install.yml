@@ -16,7 +16,7 @@
 
     - name: Install ESXi patch
       ansible.builtin.shell: >
-        esxcli software profile update -p ESXi-7.0U3p-23307199-depot-standard -d {{ patch_file }} 
+        esxcli software profile update -p ESXi-7.0U3p-23307199-standard -d {{ patch_file }} 
       register: patch_output
 
     - name: Show patch result
