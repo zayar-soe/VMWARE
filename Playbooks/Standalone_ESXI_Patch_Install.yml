@@ -4,7 +4,7 @@
   gather_facts: no
   become: false
   vars:
-    patch_file: /vmfs/volumes/68a2f8e3-3c4054b9-8d0c-000c29bbac35/VMware-ESXi-8.0U3e-24674464-depot.zip
+    patch_file: /vmfs/volumes/68a42703-19b023d8-294c-000c29d2ad89/VMware-ESXi-8.0U3e-24674464-depot.zip
 
   tasks:
     - name: Put host in maintenance mode
