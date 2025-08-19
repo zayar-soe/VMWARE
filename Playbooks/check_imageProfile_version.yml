@@ -1,0 +1,14 @@
+---
+- name: Check current ESXi version
+  hosts: ESXI-01
+  gather_facts: no
+  become: false
+
+  tasks:
+    - name: Run 'vmware -v' to get ESXi version
+      ansible.builtin.shell: vmware -v
+      register: version_output
+
+    - name: Show ESXi version
+      debug:
+        var: version_output.stdout
